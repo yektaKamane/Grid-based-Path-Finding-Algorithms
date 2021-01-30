@@ -2,33 +2,46 @@ import java.util.ArrayList;
 
 public class Graph {
     int V;
-    ArrayList<ArrayList<Integer>> graph = new ArrayList<>(V);
+    int [][] graph;
 
     public Graph(int i) {
         this.V = i;
+        graph = new int[V][V];
+        for (int j=0 ; j<this.V ; j++){
+            for(int k=0 ; k<this.V ; k++){
+                graph[j][k] = -1;
+            }
+
+        }
     }
 
-    int minDistance(ArrayList dist ,ArrayList sptSet){
+    int minDistance(int[] dist ,boolean[] sptSet){
         int min = Integer.MAX_VALUE;
         int min_index = 0;
         for (int i=0 ; i<V ; i++){
-         if (( (int)dist.get(i) < min) && (sptSet.get(i) == false)){
-            min = (int)dist.get(i);
+         if (( dist[i] < min) && (sptSet[i] == false)){
+            min = (int)dist[i];
             min_index   = i;
          }
         }
         return min_index;
     }
-    ArrayList diskstra(int src){
-        ArrayList<Integer> dist = new ArrayList<>(V);
-        dist.add(src , 0);
-        ArrayList<Boolean> sptSet = new ArrayList<>(V);
+    int[] dijkstra(int src){
+        int[] dist = new int[V];
+        for (int i = 0; i <V ; i++) {
+            dist[i] = Integer.MAX_VALUE;
+        }
+        dist[src] = 0;
+        boolean[] sptSet = new boolean[V];
+        for (int i = 0; i <V ; i++) {
+            sptSet[i] = false;
+        }
         for (int i=0 ; i<V ; i++){
             int u = minDistance(dist , sptSet);
-            sptSet.set(u , true);
+            sptSet[u] = true;
             for (int v=0 ; v<V ; v++){
-                if (graph.get(u).get(v) >= 0 && sptSet.get(v) == false && dist.get(v) > dist.get(u) + graph.get(u).get(v)){
-                    dist.set(v ,dist.get(u) + graph.get(u).get(v) );
+                if (graph[u][v] >= 0 && sptSet[v] == false && dist[v] > dist[u] + graph[u][v]){
+                    dist[v] = dist[u] + graph[u][v];
                 }
             }
         }
